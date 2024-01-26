@@ -6,7 +6,7 @@ const api ={
         {
             method:"GET",
             headers:{
-                "Authorization":`Bearer ${token}`
+                "Authorization":`Bearer `
             }
         })
     },

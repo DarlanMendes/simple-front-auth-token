@@ -1,20 +1,22 @@
 import api from "./../../api/index"
 import { useState } from "react"
-export default function FormLogin({setToken}) {
-    const [user, setUser] = useState({ name: "", password: "" })
-
+import { useContext } from "react"
+import {UserContext} from "./../../context/UserContext"
+import { useNavigate } from "react-router-dom"
+export default function FormLogin() {
+    const [data, setData] = useState({ name: "", password: "" })
+    const navigation = useNavigate()
+    const {signIn, user} = useContext(UserContext)
+    if(user!==null ){
+        navigation("/")
+    }
     async function handleSubmit(e) {
         e.preventDefault()
-        const response = await api.postLogin(user.name, user.password)
-        const result = await response.json()
-        const{token} = result
-        if(token){
-            localStorage.setItem("token", token)
-            setToken(token)
-        }
+        signIn(data.name, data.password)
+        
     }
     function handleInputChanges(e) {
-        setUser((userPrev) => ({ ...userPrev, [e.target.name]: e.target.value }))
+        setData((userPrev) => ({ ...userPrev, [e.target.name]: e.target.value }))
     }
     return (
         <form onSubmit={handleSubmit}
@@ -28,7 +30,7 @@ export default function FormLogin({setToken}) {
                     name="name"
                     className="border rounded-md px-2 py-1"
                     onChange={handleInputChanges}
-                    value={user.name}
+                    value={data.name}
                 />
             </label>
             <label className=" flex gap-7 justify-between items-center">Senha:
@@ -36,7 +38,7 @@ export default function FormLogin({setToken}) {
                     name="password"
                     className="border rounded-md px-2 py-1"
                     onChange={handleInputChanges}
-                    value={user.password}
+                    value={data.password}
                 />
             </label>
             <div className="flex flex-col items-center">

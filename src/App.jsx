@@ -1,44 +1,38 @@
 
-
-
-import FormLogin from "./components/FormLogin"
-import PrivatePages from "./components/PrivatePages"
-import Home from "./components/Home"
-import { useState, useEffect } from "react"
-import { jwtDecode } from "jwt-decode"
+import Login from "./pages/Login"
+import Home from "./pages/Home"
+import Profile from "./pages/Profile"
+import { useContext } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { UserContext } from "./context/UserContext"
 
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"))
-  const [decodedToken, setDecodedToken] = useState(null);
+  const {user} = useContext(UserContext)
 
-  useEffect(() => {
-   
-    if (token) {
 
-      // Decodifica o token usando a chave secreta usada no servidor
-      try {
-        const decoded = jwtDecode(token, 'seuSegredoSuperSecreto');
-        console.log(decoded)
-        setDecodedToken(decoded);
-      } catch (error) {
-        console.error('Erro ao decodificar o token:', error.message);
-        setDecodedToken(null);
-      }
-    } else {
-      setDecodedToken(null);
-    }
-  }, [token]);
 
   return (
     <main className="flex flex-col items-center justify-center h-screen bg-fuchsia-800">
-      {decodedToken ?
-        <PrivatePages decodedToken={decodedToken}>
-          <Home setToken={setToken}/>
-        </PrivatePages>
-        : <FormLogin setToken={setToken} />
-      }
 
+      <BrowserRouter>
+        <Routes>
+          { 
+          user &&
+            //Condição para renderização de rotas privadas
+            <>
+              <Route path="/" element={<Home />} />
+              <Route path="/profile" element={<Profile />} />
+            </>
+
+          }
+          <Route path="/login" element={<Login />} />
+
+
+
+        </Routes>
+
+      </BrowserRouter>
 
     </main>
   )

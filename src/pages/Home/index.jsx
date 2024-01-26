@@ -1,9 +1,6 @@
 import api from "../../api"
-export default function Home({setToken}){
-    function handleLogout(){
-        localStorage.clear()
-        setToken(null)
-    }
+export default function Home(){
+   
     async function handleAuthRequest(){
         const response = await api.getContentOnlyIfAuth()
         const result = await response.json()
@@ -19,7 +16,7 @@ export default function Home({setToken}){
         </button>
         <button
         className="shadow-md bg-slate-50 px-8 py-2 rounded-md font-medium"
-       onClick={handleLogout}
+       
        >Fazer Logout</button>
         </span>
     )
